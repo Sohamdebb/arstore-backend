@@ -1,15 +1,55 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Trash2, Minus, Plus, ShoppingBag, ArrowRight, ShoppingCart } from 'lucide-react';
+import { Trash2, Minus, Plus, ShoppingBag, ArrowRight, ShoppingCart, CheckCircle, Loader2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import ApiService from '../services/api';
 import toast from 'react-hot-toast';
 
 export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCart();
+  const { user } = useAuth();
+  const [orderPlaced, setOrderPlaced] = useState(false);
+  const [orderId, setOrderId] = useState(null);
+  const [placing, setPlacing] = useState(false);
 
   const handleRemove = (item) => {
     removeFromCart(item.id);
     toast.success(`${item.productName} removed from cart`);
   };
+
+  if (orderPlaced) {
+    return (
+      <div className="min-h-screen py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="glass rounded-3xl p-12 max-w-lg mx-auto">
+            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-500/20 flex items-center justify-center">
+              <CheckCircle className="w-12 h-12 text-green-400" />
+            </div>
+            <h2 className="text-3xl font-bold text-white mb-4">Order Confirmed!</h2>
+            <p className="text-dark-200 mb-2">Thank you for your purchase.</p>
+            <p className="text-dark-300 text-sm mb-8">Your order #{orderId || 'AR-' + Date.now().toString().slice(-6)} has been placed successfully. You will receive a confirmation email shortly.</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                to="/products"
+                onClick={() => setOrderPlaced(false)}
+                className="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-medium transition-colors"
+              >
+                Continue Shopping
+              </Link>
+              <Link
+                to="/orders"
+                onClick={() => setOrderPlaced(false)}
+                className="px-6 py-3 glass glass-hover text-white rounded-xl font-medium"
+              >
+                View Orders
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (cart.length === 0) {
     return (
@@ -153,9 +193,41 @@ export default function CartPage() {
                 </div>
               )}
 
-              <button className="w-full flex items-center justify-center space-x-2 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/25">
-                <span>Proceed to Checkout</span>
-                <ArrowRight className="w-5 h-5" />
+              <button
+                onClick={async () => {
+                  if (!user) {
+                    toast.error('Please login to place an order');
+                    return;
+                  }
+                  setPlacing(true);
+                  try {
+                    const orderData = {
+                      shippingAddress: user.address || '456 Innovation Ave, San Francisco, CA',
+                      paymentMethod: 'Credit Card',
+                      items: cart.map((item) => ({
+                        productId: item.id,
+                        quantity: item.quantity,
+                      })),
+                    };
+                    const res = await ApiService.createOrder(orderData);
+                    setOrderId(res.data.orderNumber);
+                    setOrderPlaced(true);
+                    clearCart();
+                    toast.success('Order placed successfully!');
+                  } catch (err) {
+                    toast.error(err.message || 'Failed to place order');
+                  } finally {
+                    setPlacing(false);
+                  }
+                }}
+                disabled={placing}
+                className="w-full flex items-center justify-center space-x-2 py-4 bg-primary-600 hover:bg-primary-700 disabled:bg-primary-800 disabled:cursor-not-allowed text-white rounded-2xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/25"
+              >
+                {placing ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <><span>Place Order</span><ArrowRight className="w-5 h-5" /></>
+                )}
               </button>
 
               <Link

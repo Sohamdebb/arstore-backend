@@ -73,7 +73,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="border-t border-white/10 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between">
           <p className="text-dark-300 text-sm">
-            &copy; 2024 AR Store. All rights reserved.
+            &copy; 2026 AR Store. All rights reserved.
           </p>
           <div className="flex items-center space-x-4 mt-4 md:mt-0">
             <a href="#" className="text-dark-300 hover:text-primary-400 transition-colors">

@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, ArrowLeft, Star, Package, Shield, Truck, Minus, Plus, ChevronRight } from 'lucide-react';
+import { ShoppingCart, Star, Package, Shield, Truck, Minus, Plus, ChevronRight, Layers, Camera, Info } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import toast from 'react-hot-toast';
 import ApiService from '../services/api';
+import ThreeDViewer from '../components/ThreeDViewer';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -12,6 +13,7 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [activeTab, setActiveTab] = useState('image');
 
   useEffect(() => {
     ApiService.getProduct(id)
@@ -68,24 +70,53 @@ export default function ProductDetailPage() {
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Image */}
-          <div className="relative">
-            <div className="aspect-square rounded-2xl overflow-hidden bg-dark-600 glass">
-              <img
-                src={product.imageUrl || 'https://via.placeholder.com/600x600?text=AR+Product'}
-                alt={product.productName}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/600x600?text=AR+Product';
-                }}
-              />
+          {/* Media Section */}
+          <div>
+            {/* Tab Switcher */}
+            <div className="flex items-center space-x-2 mb-4">
+              <button
+                onClick={() => setActiveTab('image')}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  activeTab === 'image' ? 'bg-primary-600 text-white' : 'bg-dark-600 text-dark-200 hover:text-white'
+                }`}
+              >
+                <Info className="w-4 h-4" />
+                <span>Product Image</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('3d')}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  activeTab === '3d' ? 'bg-primary-600 text-white' : 'bg-dark-600 text-dark-200 hover:text-white'
+                }`}
+              >
+                <Layers className="w-4 h-4" />
+                <span>3D / AR View</span>
+              </button>
             </div>
-            {product.category && (
-              <div className="absolute top-4 left-4">
-                <span className="px-4 py-2 text-sm font-medium bg-primary-500/90 text-white rounded-full backdrop-blur-sm">
-                  {product.category}
-                </span>
+
+            {/* Media Content */}
+            {activeTab === 'image' ? (
+              <div className="relative">
+                <div className="aspect-square rounded-2xl overflow-hidden bg-dark-600 glass">
+                  <img
+                    src={product.imageUrl || 'https://via.placeholder.com/600x600?text=AR+Product'}
+                    alt={product.productName}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = 'https://via.placeholder.com/600x600?text=AR+Product';
+                    }}
+                  />
+                </div>
+                {product.category && (
+                  <div className="absolute top-4 left-4">
+                    <span className="px-4 py-2 text-sm font-medium bg-primary-500/90 text-white rounded-full backdrop-blur-sm">
+                      {product.category}
+                    </span>
+                  </div>
+                )}
               </div>
+            ) : (
+              <ThreeDViewer product={product} />
             )}
           </div>
 
@@ -104,9 +135,9 @@ export default function ProductDetailPage() {
                   />
                 ))}
               </div>
-              <span className="text-dark-200">(4.{Math.floor(Math.random() * 5) + 5} / 5.0)</span>
+              <span className="text-dark-200">(4.{product.id % 3 === 0 ? 9 : product.id % 2 === 0 ? 7 : 8} / 5.0)</span>
               <span className="text-dark-300">|</span>
-              <span className="text-dark-200">{Math.floor(Math.random() * 200) + 50} reviews</span>
+              <span className="text-dark-200">{50 + product.id * 17 % 200} reviews</span>
             </div>
 
             {/* Price */}

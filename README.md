@@ -9,49 +9,44 @@
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![H2](https://img.shields.io/badge/H2-Database-4A90D9?style=for-the-badge&logo=databricks&logoColor=white)
 
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![PRs](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg)
 ![Stars](https://img.shields.io/github/stars/Sohamdebb/arstore-backend)
-![Forks](https://img.shields.io/github/forks/Sohamdebb/arstore-backend)
 
 ---
 
-**AR Store** is a full-stack e-commerce platform for Augmented Reality & Mixed Reality devices. Built with a robust Spring Boot backend and a sleek React frontend, it offers a premium shopping experience for cutting-edge AR/VR technology.
+**AR Store** is a full-stack e-commerce platform for Augmented Reality & Mixed Reality devices with **3D product viewing**, a complete **order management system**, and an **admin dashboard**. Built with Spring Boot backend and React frontend.
 
-[🚀 Live Demo](#-quick-start) • [📖 API Docs](#-api-endpoints) • [📥 Getting Started](#-getting-started) • [🤝 Contributing](#-contributors)
+[🚀 Quick Start](#-getting-started) • [📡 API Docs](#-api-endpoints) • [🏗️ Architecture](#-architecture) • [🤝 Contributing](#-contributors)
 
 ---
 
 </div>
 
-## 📊 Project Overview
+## 🏗️ Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        🏗️  ARCHITECTURE                            │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   ┌──────────────┐      REST API       ┌──────────────────────┐    │
-│   │              │ ◄──────────────────► │                      │    │
-│   │   REACT      │      /api/*         │   SPRING BOOT        │    │
-│   │   FRONTEND   │                     │   BACKEND            │    │
-│   │              │                     │                      │    │
-│   │  • Vite      │                     │  • JPA / Hibernate   │    │
-│   │  • Tailwind  │                     │  • Spring Security   │    │
-│   │  • React     │                     │  • MySQL             │    │
-│   │    Router    │                     │  • Lombok            │    │
-│   │              │                     │  • Validation        │    │
-│   └──────────────┘                     └──────────┬───────────┘    │
-│         │                                         │                 │
-│         ▼                                         ▼                 │
-│   ┌──────────────┐                     ┌──────────────────────┐    │
-│   │   localhost   │                     │   MySQL Database     │    │
-│   │   :5173       │                     │   localhost:3306     │    │
-│   └──────────────┘                     └──────────────────────┘    │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
+ARStore
+│
+├── 🎨 Frontend (React 18 + Vite 5 + Tailwind CSS)
+│   ├── 🔮 3D/AR Model Viewer (Google model-viewer)
+│   ├── 🖼️ Product Image Gallery
+│   ├── 🛒 Shopping Cart (localStorage)
+│   ├── 👤 Authentication (JWT-style tokens)
+│   └── 📱 Fully Responsive UI
+│
+├── ⚙️ Backend (Spring Boot 3.5 + Java 21)
+│   ├── 👤 Users — Register, Login, Profile, Roles
+│   ├── 📦 Products — CRUD, Search, Filter, Categories
+│   └── 🛒 Orders — Create, History, Status Tracking, Revenue Stats
+│
+└── 💾 Database (H2 in-memory — instant, zero setup)
+    ├── users table
+    ├── products table
+    ├── orders table
+    └── order_items table
 ```
 
 <br>
@@ -63,27 +58,32 @@
 <td width="50%" valign="top">
 
 ### 🖥️ Backend
-- **RESTful API** with full CRUD operations
-- **JWT-style Authentication** (Base64 token)
-- **BCrypt Password Hashing** for security
+- **Full REST API** — 18 endpoints (Products + Users + Orders)
+- **Order Management** — Create orders, track status, revenue stats
+- **Stock Management** — Auto-deduct stock on order placement
+- **Tax & Shipping** — 8% tax, free shipping over $500
+- **BCrypt Password Hashing**
 - **Input Validation** with Jakarta annotations
-- **Global Exception Handling** with clean JSON responses
-- **CORS Configuration** for cross-origin requests
-- **Data Seeding** with 12 AR/VR products
+- **Global Exception Handling**
+- **CORS Configuration**
+- **Data Seeding** — 12 products, 2 users, 4 demo orders
 - **Search & Filter** by keyword, category, brand
 - **Soft Delete** for products
+- **Role-Based Access** (ADMIN / USER)
 
 </td>
 <td width="50%" valign="top">
 
 ### 🎨 Frontend
-- **Responsive Design** — works on all devices
+- **3D/AR Product Viewer** — Interactive 3D models, AR mode on mobile
 - **Dark Glassmorphism UI** with smooth animations
-- **Product Catalog** with grid view
-- **Advanced Search** with category filters & price range
-- **Shopping Cart** with quantity management
-- **User Authentication** (login/register)
-- **User Profile** page with account details
+- **9 Pages** — Home, Products, Detail, Cart, Login, Register, Profile, Orders, Admin
+- **Admin Dashboard** — Product CRUD, order management, revenue stats
+- **Order History** — Status timeline, expandable order details
+- **Shopping Cart** — Quantity management, real-time totals
+- **Advanced Search** — Category filters, price range, sort
+- **User Authentication** with localStorage persistence
+- **Responsive Design** — works on all devices
 - **Loading Skeletons** for better UX
 - **Toast Notifications** for user feedback
 
@@ -109,58 +109,18 @@
 
 ## 🗂️ Tech Stack
 
-<table>
-<tr>
-<td><strong>Layer</strong></td>
-<td><strong>Technology</strong></td>
-<td><strong>Purpose</strong></td>
-</tr>
-<tr>
-<td>🎨 Frontend</td>
-<td>React 18, Vite 5, Tailwind CSS 3</td>
-<td>UI, Build tool, Styling</td>
-</tr>
-<tr>
-<td>🧭 Routing</td>
-<td>React Router v6</td>
-<td>Client-side navigation</td>
-</tr>
-<tr>
-<td>🔔 Notifications</td>
-<td>React Hot Toast</td>
-<td>User feedback toasts</td>
-</tr>
-<tr>
-<td>🎨 Icons</td>
-<td>Lucide React</td>
-<td>Beautiful, consistent icons</td>
-</tr>
-<tr>
-<td>⚙️ Backend</td>
-<td>Spring Boot 3.5, Java 21</td>
-<td>REST API server</td>
-</tr>
-<tr>
-<td>🗄️ ORM</td>
-<td>Spring Data JPA / Hibernate</td>
-<td>Database operations</td>
-</tr>
-<tr>
-<td>🔐 Security</td>
-<td>Spring Security, BCrypt</td>
-<td>Auth & password hashing</td>
-</tr>
-<tr>
-<td>🗃️ Database</td>
-<td>MySQL 8</td>
-<td>Data persistence</td>
-</tr>
-<tr>
-<td>📝 Boilerplate</td>
-<td>Lombok</td>
-<td>Reduce Java verbosity</td>
-</tr>
-</table>
+| Layer | Technology | Purpose |
+|:------|:-----------|:--------|
+| 🎨 Frontend | React 18, Vite 5, Tailwind CSS 3 | UI, Build, Styling |
+| 🔮 3D/AR | Google model-viewer | Interactive 3D models + AR |
+| 🧭 Routing | React Router v6 | Client-side navigation |
+| 🔔 Notifications | React Hot Toast | User feedback |
+| 🎨 Icons | Lucide React | Consistent icon system |
+| ⚙️ Backend | Spring Boot 3.5, Java 21 | REST API server |
+| 🗄️ ORM | Spring Data JPA / Hibernate | Database operations |
+| 🔐 Security | Spring Security, BCrypt | Auth & password hashing |
+| 💾 Database | H2 (default) / MySQL (production) | Data persistence |
+| 📝 Boilerplate | Lombok | Reduce Java verbosity |
 
 <br>
 
@@ -168,58 +128,67 @@
 
 ```
 arstore-backend/
-├── 📂 backend/                          # Spring Boot Backend
+├── 📂 backend/                              # Spring Boot Backend
 │   └── src/main/java/com/arstore/backend/
-│       ├── 📄 BackendApplication.java   # App entry point
+│       ├── 📄 BackendApplication.java       # App entry point
 │       ├── 📂 config/
-│       │   ├── SecurityConfig.java      # Spring Security setup
-│       │   ├── CorsConfig.java          # CORS configuration
-│       │   ├── DataSeeder.java          # Seed 12 products + 2 users
+│       │   ├── SecurityConfig.java          # Spring Security
+│       │   ├── CorsConfig.java              # CORS settings
+│       │   ├── DataSeeder.java              # Seed 12 products + 2 users + 4 orders
 │       │   └── GlobalExceptionHandler.java  # Error handling
 │       ├── 📂 controller/
-│       │   ├── ProductController.java   # /api/products endpoints
-│       │   └── UserController.java      # /api/users endpoints
+│       │   ├── ProductController.java       # /api/products endpoints
+│       │   ├── UserController.java          # /api/users endpoints
+│       │   └── OrderController.java         # /api/orders endpoints
 │       ├── 📂 dto/
-│       │   ├── ApiResponse.java         # Generic response wrapper
-│       │   ├── AuthRequest.java         # Login DTO
-│       │   ├── ProductRequest.java      # Product create/update DTO
-│       │   └── RegisterRequest.java     # Registration DTO
+│       │   ├── ApiResponse.java             # Generic response wrapper
+│       │   ├── AuthRequest.java             # Login DTO
+│       │   ├── RegisterRequest.java         # Registration DTO
+│       │   ├── ProductRequest.java          # Product CRUD DTO
+│       │   └── OrderRequest.java            # Order creation DTO
 │       ├── 📂 entity/
-│       │   ├── Product.java             # Product model (13 fields)
-│       │   └── User.java                # User model (8 fields)
+│       │   ├── Product.java                 # Product model
+│       │   ├── User.java                    # User model
+│       │   ├── Order.java                   # Order model
+│       │   └── OrderItem.java               # Order item model
 │       ├── 📂 repository/
-│       │   ├── ProductRepository.java   # JPA queries + search
-│       │   └── UserRepository.java      # JPA queries + auth
+│       │   ├── ProductRepository.java       # Product queries
+│       │   ├── UserRepository.java          # User queries
+│       │   └── OrderRepository.java         # Order queries + revenue stats
 │       └── 📂 service/
-│           ├── ProductService.java      # Business logic
-│           └── UserService.java         # Auth + user logic
+│           ├── ProductService.java          # Product business logic
+│           ├── UserService.java             # Auth + user logic
+│           └── OrderService.java            # Order logic + revenue stats
 │
-├── 📂 frontend/                         # React + Vite Frontend
-│   ├── 📄 index.html
+├── 📂 frontend/                             # React + Vite Frontend
+│   ├── 📄 index.html                        # Includes model-viewer CDN
 │   ├── 📄 package.json
 │   ├── 📄 vite.config.js
 │   ├── 📄 tailwind.config.js
 │   └── 📂 src/
-│       ├── 📄 main.jsx                  # React entry point
-│       ├── 📄 App.jsx                   # Router + layout
-│       ├── 📄 index.css                 # Global styles + animations
+│       ├── 📄 main.jsx                      # React entry point
+│       ├── 📄 App.jsx                       # Router + layout (9 routes)
+│       ├── 📄 index.css                     # Global styles + animations
 │       ├── 📂 components/
-│       │   ├── Navbar.jsx               # Responsive nav + search
-│       │   ├── Footer.jsx               # Footer with links
-│       │   └── ProductCard.jsx          # Reusable product card
+│       │   ├── Navbar.jsx                   # Responsive nav + search + admin badge
+│       │   ├── Footer.jsx                   # Footer with links
+│       │   ├── ProductCard.jsx              # Product card with add-to-cart
+│       │   └── ThreeDViewer.jsx             # 3D/AR model viewer component
 │       ├── 📂 context/
-│       │   ├── AuthContext.jsx          # Auth state management
-│       │   └── CartContext.jsx          # Cart state management
+│       │   ├── AuthContext.jsx              # Auth state management
+│       │   └── CartContext.jsx              # Cart state management
 │       ├── 📂 pages/
-│       │   ├── HomePage.jsx             # Landing page
-│       │   ├── ProductsPage.jsx         # Product catalog
-│       │   ├── ProductDetailPage.jsx    # Single product view
-│       │   ├── CartPage.jsx             # Shopping cart
-│       │   ├── LoginPage.jsx            # User login
-│       │   ├── RegisterPage.jsx         # User registration
-│       │   └── ProfilePage.jsx          # User profile
+│       │   ├── HomePage.jsx                 # Landing page with hero + featured
+│       │   ├── ProductsPage.jsx             # Product catalog with filters
+│       │   ├── ProductDetailPage.jsx        # Product detail + 3D viewer tabs
+│       │   ├── CartPage.jsx                 # Shopping cart + checkout
+│       │   ├── LoginPage.jsx                # User login
+│       │   ├── RegisterPage.jsx             # User registration
+│       │   ├── ProfilePage.jsx              # User profile + quick actions
+│       │   ├── OrderHistoryPage.jsx         # Order history with status timeline
+│       │   └── AdminDashboard.jsx           # Admin panel (products + orders)
 │       └── 📂 services/
-│           └── api.js                   # API client
+│           └── api.js                       # API client (all endpoints)
 │
 └── 📄 README.md
 ```
@@ -234,23 +203,10 @@ arstore-backend/
 |:------------|:-------:|:--------|
 | Java | 21+ | [Download](https://adoptium.net/) |
 | Node.js | 18+ | [Download](https://nodejs.org/) |
-| MySQL | 8+ | [Download](https://dev.mysql.com/) |
 
-### 1️⃣ Database Setup
+> 💡 **No MySQL needed!** The app uses H2 in-memory database by default.
 
-```sql
-CREATE DATABASE arstore;
-```
-
-Update `application.properties` with your MySQL credentials:
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/arstore
-spring.datasource.username=root
-spring.datasource.password=YOUR_PASSWORD
-```
-
-### 2️⃣ Backend Setup
+### 1️⃣ Backend Setup
 
 ```bash
 cd backend
@@ -259,7 +215,7 @@ cd backend
 
 🟢 Backend starts at → `http://localhost:8080`
 
-### 3️⃣ Frontend Setup
+### 2️⃣ Frontend Setup
 
 ```bash
 cd frontend
@@ -269,23 +225,23 @@ npm run dev
 
 🟢 Frontend starts at → `http://localhost:5173`
 
-### 4️⃣ Demo Accounts
+### 3️⃣ Demo Accounts
 
-| Role | Email | Password | Description |
-|:-----|:------|:---------|:------------|
-| 👑 Admin | `admin@arstore.com` | `admin123` | Full admin access |
-| 👤 User | `demo@arstore.com` | `demo123` | Standard user |
+| Role | Email | Password | Access |
+|:-----|:------|:---------|:-------|
+| 👑 Admin | `admin@arstore.com` | `admin123` | All pages + Admin Dashboard |
+| 👤 User | `demo@arstore.com` | `demo123` | All pages except Admin |
 
-> 💡 **Tip:** Use the one-click demo buttons on the login page!
+> 💡 Use the one-click demo buttons on the login page!
 
 <br>
 
 ## 📡 API Endpoints
 
-### Products
+### Products (9 endpoints)
 
-| Method | Endpoint | Description | Auth Required |
-|:------:|:---------|:------------|:-------------:|
+| Method | Endpoint | Description | Auth |
+|:------:|:---------|:------------|:----:|
 | `GET` | `/api/products` | Get all active products | ❌ |
 | `GET` | `/api/products/{id}` | Get product by ID | ❌ |
 | `POST` | `/api/products` | Create new product | ❌ |
@@ -296,155 +252,120 @@ npm run dev
 | `GET` | `/api/products/categories` | Get all categories | ❌ |
 | `GET` | `/api/products/brands` | Get all brands | ❌ |
 
-### Users
+### Users (5 endpoints)
 
-| Method | Endpoint | Description | Auth Required |
-|:------:|:---------|:------------|:-------------:|
+| Method | Endpoint | Description | Auth |
+|:------:|:---------|:------------|:----:|
 | `POST` | `/api/users/register` | Register new user | ❌ |
 | `POST` | `/api/users/login` | Login & get token | ❌ |
 | `GET` | `/api/users/me` | Get current user | ✅ Bearer |
 | `GET` | `/api/users/{id}` | Get user by ID | ❌ |
-| `PUT` | `/api/users/{id}` | Update user profile | ❌ |
+| `PUT` | `/api/users/{id}` | Update user | ❌ |
+
+### Orders (4 endpoints)
+
+| Method | Endpoint | Description | Auth |
+|:------:|:---------|:------------|:----:|
+| `POST` | `/api/orders` | Create order (deducts stock, calculates tax) | ✅ Bearer |
+| `GET` | `/api/orders` | Get current user's orders | ✅ Bearer |
+| `GET` | `/api/orders/admin/all` | Get all orders | ❌ |
+| `PUT` | `/api/orders/admin/{id}/status` | Update order status | ❌ |
+| `GET` | `/api/orders/admin/stats` | Revenue & order statistics | ❌ |
+
+### Order Status Flow
+
+```
+PENDING → CONFIRMED → SHIPPED → DELIVERED
+    └────→ CANCELLED
+```
 
 ### Request/Response Examples
 
 <details>
-<summary><b>POST /api/users/register</b></summary>
+<summary><b>POST /api/orders — Create Order</b></summary>
 
 ```json
 // Request
 {
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "secret123"
+  "shippingAddress": "123 Tech Street, Silicon Valley, CA",
+  "paymentMethod": "Credit Card",
+  "items": [
+    { "productId": 1, "quantity": 1 },
+    { "productId": 3, "quantity": 2 }
+  ]
 }
 
 // Response
 {
   "success": true,
-  "message": "Registration successful",
+  "message": "Order placed successfully",
   "data": {
-    "user": {
-      "id": 3,
-      "name": "John Doe",
-      "email": "john@example.com",
-      "role": "USER"
-    },
-    "token": "Mzpqb2huQGV4YW1wbGUuY29tOjU="
+    "id": 1,
+    "orderNumber": "AR-100001",
+    "status": "CONFIRMED",
+    "totalAmount": 1397.97,
+    "shippingAddress": "123 Tech Street, Silicon Valley, CA",
+    "paymentMethod": "Credit Card",
+    "items": [
+      {
+        "product": { "productName": "Apple iPhone 15 Pro Max" },
+        "quantity": 1,
+        "price": 1199.99,
+        "subtotal": 1199.99
+      },
+      {
+        "product": { "productName": "Meta Quest 3 VR Headset" },
+        "quantity": 2,
+        "price": 499.99,
+        "subtotal": 999.98
+      }
+    ]
   }
 }
 ```
 </details>
 
 <details>
-<summary><b>GET /api/products</b></summary>
+<summary><b>GET /api/orders/admin/stats — Revenue Statistics</b></summary>
 
 ```json
 {
   "success": true,
-  "message": "Products fetched successfully",
-  "data": [
-    {
-      "id": 1,
-      "productName": "Apple iPhone 15 Pro Max",
-      "description": "The most powerful iPhone ever...",
-      "price": 1199.99,
-      "imageUrl": "https://images.unsplash.com/...",
-      "category": "Smartphones",
-      "brand": "Apple",
-      "stock": 50,
-      "active": true
+  "message": "Stats fetched",
+  "data": {
+    "totalRevenue": 9914.92,
+    "totalOrders": 4,
+    "monthlyRevenue": 9914.92,
+    "ordersByStatus": {
+      "DELIVERED": 1,
+      "SHIPPED": 1,
+      "CONFIRMED": 1,
+      "PENDING": 1
     }
-  ]
+  }
 }
 ```
 </details>
 
 <br>
 
-## 🎨 UI Screenshots
+## 🎨 Pages
 
-<table>
-<tr>
-<td align="center"><b>🏠 Home Page</b></td>
-<td align="center"><b>🛍️ Product Catalog</b></td>
-<td align="center"><b>🛒 Shopping Cart</b></td>
-</tr>
-<tr>
-<td>
-<pre>
-┌─────────────────────────────┐
-│  🔵 AR Store    🔍    🛒 👤 │
-├─────────────────────────────┤
-│                             │
-│   Experience 🌟             │
-│   Augmented Reality         │
-│   Products                  │
-│                             │
-│   [Shop Now]  [Browse AR]   │
-│                             │
-├─────────────────────────────┤
-│  🚚 Free  🛡️ Warranty 🚀 Fast│
-├─────────────────────────────┤
-│  ⭐ Featured Products        │
-│  ┌────┐ ┌────┐ ┌────┐ ┌────┐│
-│  │📱  │ │🥽  │ │👓  │ │📷  ││
-│  │$1.2k│ │$499│ │$379│ │$349││
-│  └────┘ └────┘ └────┘ └────┘│
-└─────────────────────────────┘
-</pre>
-</td>
-<td>
-<pre>
-┌─────────────────────────────┐
-│  🔵 AR Store    🔍    🛒 👤 │
-├─────────────────────────────┤
-│  All Products    [Filters]  │
-│  📱 Smartphones  🥽 AR/VR   │
-│  ─────────────────────────  │
-│  ┌────┐ ┌────┐ ┌────┐      │
-│  │📱  │ │🥽  │ │👓  │      │
-│  │$1.2k│ │$499│ │$379│      │
-│  └────┘ └────┘ └────┘      │
-│  ┌────┐ ┌────┐ ┌────┐      │
-│  │📷  │ │🎮  │ │💻  │      │
-│  │$349│ │$249│ │$1.4k│      │
-│  └────┘ └────┘ └────┘      │
-└─────────────────────────────┘
-</pre>
-</td>
-<td>
-<pre>
-┌─────────────────────────────┐
-│  🔵 AR Store    🔍    🛒 👤 │
-├─────────────────────────────┤
-│  Shopping Cart              │
-│  ┌─────────────────────┐    │
-│  │ 📱 iPhone 15 Pro  -1+│    │
-│  │              $1,199  │    │
-│  └─────────────────────┘    │
-│  ┌─────────────────────┐    │
-│  │ 🥽 Quest 3       -1+│    │
-│  │              $499   │    │
-│  └─────────────────────┘    │
-│  ─────────────────────────  │
-│  Subtotal:    $1,698.98     │
-│  Shipping:          FREE    │
-│  Tax:            $135.92    │
-│  Total:        $1,834.90    │
-│  [Proceed to Checkout]      │
-└─────────────────────────────┘
-</pre>
-</td>
-</tr>
-</table>
+| Page | Route | Description |
+|:-----|:------|:------------|
+| 🏠 Home | `/` | Hero section, featured products, features |
+| 🛍️ Products | `/products` | Full catalog with search, filter, sort |
+| 🔮 Product Detail | `/products/:id` | Image + 3D viewer tabs, add to cart |
+| 🛒 Cart | `/cart` | Cart items, quantity controls, checkout |
+| 🔐 Login | `/login` | Email/password with demo buttons |
+| 📝 Register | `/register` | Full registration with validation |
+| 👤 Profile | `/profile` | User info, quick actions, admin link |
+| 📋 Orders | `/orders` | Order history with status timeline |
+| 📊 Admin | `/admin` | Product CRUD + order management + stats |
 
 <br>
 
-## 🧪 Testing the API
-
-<details>
-<summary><b>Test with cURL</b></summary>
+## 🧪 Testing
 
 ```bash
 # Get all products
@@ -453,22 +374,20 @@ curl http://localhost:8080/api/products
 # Search products
 curl "http://localhost:8080/api/products/search?keyword=apple"
 
-# Register
-curl -X POST http://localhost:8080/api/users/register \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Test","email":"test@test.com","password":"test123"}'
-
 # Login
 curl -X POST http://localhost:8080/api/users/login \
   -H "Content-Type: application/json" \
   -d '{"email":"demo@arstore.com","password":"demo123"}'
 
-# Get profile (with token)
-curl http://localhost:8080/api/users/me \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"
-```
+# Create order (replace TOKEN)
+curl -X POST http://localhost:8080/api/orders \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer TOKEN" \
+  -d '{"shippingAddress":"123 Main St","paymentMethod":"Credit Card","items":[{"productId":1,"quantity":1}]}'
 
-</details>
+# Get order stats (admin)
+curl http://localhost:8080/api/orders/admin/stats
+```
 
 <br>
 
@@ -477,24 +396,28 @@ curl http://localhost:8080/api/users/me \
 <table>
 <tr>
 <td align="center">
-<h3>39</h3>
-<p><b>Files Created</b></p>
+<h3>21</h3>
+<p><b>Java Files</b></p>
 </td>
 <td align="center">
-<h3>~3000</h3>
-<p><b>Lines of Code</b></p>
+<h3>17</h3>
+<p><b>React Files</b></p>
 </td>
 <td align="center">
-<h3>12</h3>
+<h3>18</h3>
 <p><b>API Endpoints</b></p>
 </td>
 <td align="center">
-<h3>7</h3>
+<h3>9</h3>
 <p><b>Pages</b></p>
 </td>
 <td align="center">
 <h3>12</h3>
 <p><b>Seed Products</b></p>
+</td>
+<td align="center">
+<h3>4</h3>
+<p><b>Seed Orders</b></p>
 </td>
 </tr>
 </table>
@@ -529,7 +452,7 @@ curl http://localhost:8080/api/users/me \
 <br />
 <code>React • Vite • Tailwind CSS</code>
 <br />
-<code>UI/UX • State Management</code>
+<code>UI/UX • 3D/AR • State Management</code>
 </td>
 </tr>
 </table>
@@ -543,22 +466,22 @@ curl http://localhost:8080/api/users/me \
 <tr>
 <td>🔧 Responsibility</td>
 <td>Backend Architecture & API Design</td>
-<td>Frontend Development & UI/UX</td>
+<td>Frontend Development, UI/UX & 3D/AR</td>
 </tr>
 <tr>
 <td>📁 Files</td>
-<td>14 Java files (entities, controllers, services, config)</td>
-<td>25 files (React components, pages, contexts, config)</td>
+<td>21 Java files (entities, controllers, services, config, DTOs)</td>
+<td>17 React files (components, pages, contexts, services)</td>
 </tr>
 <tr>
 <td>🛠️ Tech</td>
-<td>Spring Boot, JPA, MySQL, Spring Security, Lombok</td>
-<td>React, Vite, Tailwind CSS, React Router, Lucide Icons</td>
+<td>Spring Boot, JPA, H2/MySQL, Spring Security, Lombok</td>
+<td>React, Vite, Tailwind CSS, model-viewer, Lucide Icons</td>
 </tr>
 <tr>
 <td>✨ Key Features</td>
-<td>REST API, Auth system, Data seeding, Validation, Error handling</td>
-<td>Responsive UI, Search/Filter, Cart system, Auth pages, Animations</td>
+<td>REST API, Auth, Orders, Stock mgmt, Revenue stats, Data seeding</td>
+<td>3D/AR viewer, Admin dashboard, Order history, Cart, Responsive UI</td>
 </tr>
 </table>
 
@@ -566,7 +489,7 @@ curl http://localhost:8080/api/users/me \
 
 ## 📝 License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 <br>
 
@@ -577,7 +500,5 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 **Built with ❤️ by [Arghya](https://github.com/officialarghya29) & [Soham](https://github.com/Sohamdebb)**
 
 *⭐ Star this repo if you found it helpful!*
-
-![Visitors](https://api.visitorbadge.io/api/visitors?path=Sohamdebb%2Farstore-backend&countColor=%2337d67a&style=flat)
 
 </div>

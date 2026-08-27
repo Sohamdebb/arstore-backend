@@ -1,7 +1,10 @@
 package com.arstore.backend.config;
 
+import com.arstore.backend.entity.Order;
+import com.arstore.backend.entity.OrderItem;
 import com.arstore.backend.entity.Product;
 import com.arstore.backend.entity.User;
+import com.arstore.backend.repository.OrderRepository;
 import com.arstore.backend.repository.ProductRepository;
 import com.arstore.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +13,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -19,6 +24,7 @@ public class DataSeeder implements CommandLineRunner {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -28,6 +34,9 @@ public class DataSeeder implements CommandLineRunner {
         }
         if (userRepository.count() == 0) {
             seedUsers();
+        }
+        if (orderRepository.count() == 0) {
+            seedOrders();
         }
     }
 
@@ -191,5 +200,84 @@ public class DataSeeder implements CommandLineRunner {
 
         userRepository.saveAll(List.of(admin, demoUser));
         log.info("Seeded {} users", 2);
+    }
+
+    private void seedOrders() {
+        User demoUser = userRepository.findByEmail("demo@arstore.com").orElse(null);
+        User admin = userRepository.findByEmail("admin@arstore.com").orElse(null);
+        if (demoUser == null || admin == null) return;
+
+        List<Product> products = productRepository.findAll();
+        if (products.size() < 4) return;
+
+        // Order 1 - Demo user bought some items
+        Order order1 = Order.builder()
+                .user(demoUser)
+                .shippingAddress("456 Innovation Ave, San Francisco, CA")
+                .paymentMethod("Credit Card")
+                .status("DELIVERED")
+                .orderNumber("AR-100001")
+                .totalAmount(1769.97)
+                .createdAt(LocalDateTime.now().minusDays(15))
+                .build();
+        order1.setItems(new ArrayList<>());
+
+        OrderItem item1 = OrderItem.builder().order(order1).product(products.get(0)).quantity(1).price(1199.99).build();
+        OrderItem item2 = OrderItem.builder().order(order1).product(products.get(2)).quantity(1).price(499.99).build();
+        order1.getItems().add(item1);
+        order1.getItems().add(item2);
+        orderRepository.save(order1);
+
+        // Order 2 - Demo user shipped
+        Order order2 = Order.builder()
+                .user(demoUser)
+                .shippingAddress("456 Innovation Ave, San Francisco, CA")
+                .paymentMethod("PayPal")
+                .status("SHIPPED")
+                .orderNumber("AR-100002")
+                .totalAmount(410.99)
+                .createdAt(LocalDateTime.now().minusDays(5))
+                .build();
+        order2.setItems(new ArrayList<>());
+
+        OrderItem item3 = OrderItem.builder().order(order2).product(products.get(9)).quantity(1).price(379.99).build();
+        order2.getItems().add(item3);
+        orderRepository.save(order2);
+
+        // Order 3 - Admin bought items
+        Order order3 = Order.builder()
+                .user(admin)
+                .shippingAddress("123 Tech Street, Silicon Valley, CA")
+                .paymentMethod("Credit Card")
+                .status("CONFIRMED")
+                .orderNumber("AR-100003")
+                .totalAmount(7139.97)
+                .createdAt(LocalDateTime.now().minusDays(2))
+                .build();
+        order3.setItems(new ArrayList<>());
+
+        OrderItem item4 = OrderItem.builder().order(order3).product(products.get(3)).quantity(1).price(3499.99).build();
+        OrderItem item5 = OrderItem.builder().order(order3).product(products.get(4)).quantity(1).price(3500.00).build();
+        order3.getItems().add(item4);
+        order3.getItems().add(item5);
+        orderRepository.save(order3);
+
+        // Order 4 - Demo user pending
+        Order order4 = Order.builder()
+                .user(demoUser)
+                .shippingAddress("456 Innovation Ave, San Francisco, CA")
+                .paymentMethod("Debit Card")
+                .status("PENDING")
+                .orderNumber("AR-100004")
+                .totalAmount(593.99)
+                .createdAt(LocalDateTime.now().minusHours(6))
+                .build();
+        order4.setItems(new ArrayList<>());
+
+        OrderItem item6 = OrderItem.builder().order(order4).product(products.get(5)).quantity(1).price(549.99).build();
+        order4.getItems().add(item6);
+        orderRepository.save(order4);
+
+        log.info("Seeded {} orders", 4);
     }
 }

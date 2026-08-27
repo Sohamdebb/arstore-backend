@@ -1,5 +1,5 @@
 import { useAuth } from '../context/AuthContext';
-import { User, Mail, Shield, MapPin, Phone, LogOut, Package, Settings } from 'lucide-react';
+import { User, Mail, Shield, MapPin, Phone, LogOut, Package, Settings, BarChart3, ClipboardList } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function ProfilePage() {
@@ -111,6 +111,28 @@ export default function ProfilePage() {
                     <p className="text-dark-300 text-sm">Check your shopping cart</p>
                   </div>
                 </Link>
+                <Link
+                  to="/orders"
+                  className="flex items-center space-x-3 p-4 bg-dark-600 hover:bg-dark-500 rounded-xl transition-colors group"
+                >
+                  <ClipboardList className="w-5 h-5 text-yellow-400" />
+                  <div>
+                    <p className="text-white font-medium">My Orders</p>
+                    <p className="text-dark-300 text-sm">View order history & tracking</p>
+                  </div>
+                </Link>
+                {user.role === 'ADMIN' && (
+                  <Link
+                    to="/admin"
+                    className="flex items-center space-x-3 p-4 bg-dark-600 hover:bg-dark-500 rounded-xl transition-colors group"
+                  >
+                    <BarChart3 className="w-5 h-5 text-purple-400" />
+                    <div>
+                      <p className="text-white font-medium">Admin Dashboard</p>
+                      <p className="text-dark-300 text-sm">Manage products & inventory</p>
+                    </div>
+                  </Link>
+                )}
               </div>
             </div>
 

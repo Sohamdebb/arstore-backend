@@ -73,7 +73,38 @@ class ApiService {
     return this.request('/products/brands');
   }
 
+  // Orders
+  static async createOrder(orderData) {
+    return this.request('/orders', {
+      method: 'POST',
+      body: JSON.stringify(orderData),
+    });
+  }
+
+  static async getMyOrders() {
+    return this.request('/orders');
+  }
+
+  static async getOrder(id) {
+    return this.request(`/orders/${id}`);
+  }
+
   // Admin
+  static async getAllOrders() {
+    return this.request('/orders/admin/all');
+  }
+
+  static async updateOrderStatus(id, status) {
+    return this.request(`/orders/admin/${id}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  static async getAdminStats() {
+    return this.request('/orders/admin/stats');
+  }
+
   static async createProduct(product) {
     return this.request('/products', {
       method: 'POST',

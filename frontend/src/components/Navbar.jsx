@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { ShoppingCart, User, Search, Menu, X, Store, LogOut, Package } from 'lucide-react';
+import { ShoppingCart, User, Search, Menu, X, Store, LogOut, Package, BarChart3, ClipboardList } from 'lucide-react';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -61,6 +61,15 @@ export default function Navbar() {
               Products
             </Link>
 
+            {user && (
+              <Link
+                to="/orders"
+                className="px-4 py-2 text-dark-100 hover:text-white hover:bg-dark-600 rounded-xl transition-all duration-200"
+              >
+                Orders
+              </Link>
+            )}
+
             <Link
               to="/cart"
               className="relative p-2 text-dark-100 hover:text-white hover:bg-dark-600 rounded-xl transition-all duration-200"
@@ -75,6 +84,14 @@ export default function Navbar() {
 
             {user ? (
               <div className="flex items-center space-x-2">
+                {user.role === 'ADMIN' && (
+                  <Link
+                    to="/admin"
+                    className="px-4 py-2 text-xs font-medium bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-xl hover:bg-purple-500/30 transition-all duration-200"
+                  >
+                    Admin
+                  </Link>
+                )}
                 <Link
                   to="/profile"
                   className="flex items-center space-x-2 px-4 py-2 text-dark-100 hover:text-white hover:bg-dark-600 rounded-xl transition-all duration-200"
@@ -137,6 +154,17 @@ export default function Navbar() {
               <span>Products</span>
             </Link>
 
+            {user && (
+              <Link
+                to="/orders"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center space-x-3 px-4 py-3 text-dark-100 hover:text-white hover:bg-dark-600 rounded-xl"
+              >
+                <ClipboardList className="w-5 h-5" />
+                <span>My Orders</span>
+              </Link>
+            )}
+
             <Link
               to="/cart"
               onClick={() => setMobileMenuOpen(false)}
@@ -148,6 +176,16 @@ export default function Navbar() {
 
             {user ? (
               <>
+                {user.role === 'ADMIN' && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center space-x-3 px-4 py-3 text-purple-400 hover:text-purple-300 hover:bg-dark-600 rounded-xl"
+                  >
+                    <BarChart3 className="w-5 h-5" />
+                    <span>Admin Dashboard</span>
+                  </Link>
+                )}
                 <Link
                   to="/profile"
                   onClick={() => setMobileMenuOpen(false)}

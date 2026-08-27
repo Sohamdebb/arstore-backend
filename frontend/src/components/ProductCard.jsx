@@ -60,7 +60,7 @@ export default function ProductCard({ product }) {
           <span className="text-xs text-dark-200 font-medium">{product.brand || 'Unknown Brand'}</span>
           <div className="flex items-center space-x-1">
             <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-            <span className="text-xs text-dark-200">4.{Math.floor(Math.random() * 5) + 5}</span>
+            <span className="text-xs text-dark-200">4.{product.id % 3 === 0 ? 9 : product.id % 2 === 0 ? 7 : 8}</span>
           </div>
         </div>
 
