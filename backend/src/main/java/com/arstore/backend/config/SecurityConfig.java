@@ -27,6 +27,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/users/register", "/api/users/login").permitAll()
                 .requestMatchers("/api/products", "/api/products/**").permitAll()
                 .requestMatchers("/api/orders/**").permitAll()
+                .requestMatchers("/api/reviews/**").permitAll()
                 .anyRequest().permitAll()
             )
             .cors(cors -> {})

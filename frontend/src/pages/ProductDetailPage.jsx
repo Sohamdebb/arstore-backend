@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import toast from 'react-hot-toast';
 import ApiService from '../services/api';
 import ThreeDViewer from '../components/ThreeDViewer';
+import ReviewsSection from '../components/ReviewsSection';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -204,6 +205,11 @@ export default function ProductDetailPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="mt-16">
+          <ReviewsSection productId={product.id} />
         </div>
       </div>
     </div>

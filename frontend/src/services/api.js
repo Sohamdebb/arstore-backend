@@ -89,6 +89,33 @@ class ApiService {
     return this.request(`/orders/${id}`);
   }
 
+  // Admin - Users
+  static async getAllUsers() {
+    return this.request('/users');
+  }
+
+  // Reviews
+  static async getProductReviews(productId) {
+    return this.request(`/reviews/product/${productId}`);
+  }
+
+  static async getProductRatingSummary(productId) {
+    return this.request(`/reviews/product/${productId}/summary`);
+  }
+
+  static async createReview(productId, reviewData) {
+    return this.request(`/reviews/product/${productId}`, {
+      method: 'POST',
+      body: JSON.stringify(reviewData),
+    });
+  }
+
+  static async deleteReview(id) {
+    return this.request(`/reviews/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
   // Admin
   static async getAllOrders() {
     return this.request('/orders/admin/all');

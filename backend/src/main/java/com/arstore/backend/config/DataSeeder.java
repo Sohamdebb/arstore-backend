@@ -3,9 +3,11 @@ package com.arstore.backend.config;
 import com.arstore.backend.entity.Order;
 import com.arstore.backend.entity.OrderItem;
 import com.arstore.backend.entity.Product;
+import com.arstore.backend.entity.Review;
 import com.arstore.backend.entity.User;
 import com.arstore.backend.repository.OrderRepository;
 import com.arstore.backend.repository.ProductRepository;
+import com.arstore.backend.repository.ReviewRepository;
 import com.arstore.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ public class DataSeeder implements CommandLineRunner {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final ReviewRepository reviewRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -37,6 +40,9 @@ public class DataSeeder implements CommandLineRunner {
         }
         if (orderRepository.count() == 0) {
             seedOrders();
+        }
+        if (reviewRepository.count() == 0) {
+            seedReviews();
         }
     }
 
@@ -279,5 +285,26 @@ public class DataSeeder implements CommandLineRunner {
         orderRepository.save(order4);
 
         log.info("Seeded {} orders", 4);
+    }
+
+    private void seedReviews() {
+        User demoUser = userRepository.findByEmail("demo@arstore.com").orElse(null);
+        User admin = userRepository.findByEmail("admin@arstore.com").orElse(null);
+        if (demoUser == null || admin == null) return;
+
+        List<Product> products = productRepository.findAll();
+        if (products.size() < 6) return;
+
+        List<Review> reviews = List.of(
+            Review.builder().user(demoUser).product(products.get(0)).rating(5).title("Amazing phone!").comment("The AR features with LiDAR are incredible. Best iPhone ever made.").build(),
+            Review.builder().user(admin).product(products.get(0)).rating(4).title("Great but pricey").comment("Excellent build quality and AR capabilities. Just wish it was cheaper.").build(),
+            Review.builder().user(demoUser).product(products.get(2)).rating(5).title("Best VR headset").comment("Mixed reality passthrough is mind-blowing. Worth every penny.").build(),
+            Review.builder().user(admin).product(products.get(3)).title("Future is here").comment("Spatial computing is the next revolution. Heavy but incredible.").rating(5).build(),
+            Review.builder().user(demoUser).product(products.get(5)).rating(4).title("Solid gaming VR").comment("4K HDR OLED display is stunning. Haptic feedback adds immersion.").build(),
+            Review.builder().user(admin).product(products.get(9)).rating(5).title("Lightweight AR glasses").comment("These are exactly what AR glasses should be. Super comfortable.").build()
+        );
+
+        reviewRepository.saveAll(reviews);
+        log.info("Seeded {} reviews", reviews.size());
     }
 }

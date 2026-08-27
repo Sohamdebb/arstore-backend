@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
-import { Package, Plus, Edit3, Trash2, Search, Loader2, X, Save, DollarSign, TrendingUp, ShoppingCart } from 'lucide-react';
+import { Package, Plus, Edit3, Trash2, Search, Loader2, X, Save, DollarSign, TrendingUp, ShoppingCart, Users, Mail, Shield } from 'lucide-react';
 import ApiService from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -9,6 +9,7 @@ export default function AdminDashboard() {
   const { user } = useAuth();
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState([]);
   const [orderStats, setOrderStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -22,12 +23,13 @@ export default function AdminDashboard() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    Promise.all([loadProducts(), loadOrders(), loadOrderStats()]).finally(() => setLoading(false));
+    Promise.all([loadProducts(), loadOrders(), loadOrderStats(), loadUsers()]).finally(() => setLoading(false));
   }, []);
 
   const loadProducts = () => ApiService.getProducts().then(res => setProducts(res.data)).catch(console.error);
   const loadOrders = () => ApiService.getAllOrders().then(res => setOrders(res.data)).catch(console.error);
   const loadOrderStats = () => ApiService.getAdminStats().then(res => setOrderStats(res.data)).catch(console.error);
+  const loadUsers = () => ApiService.getAllUsers().then(res => setUsers(res.data)).catch(console.error);
 
   const handleUpdateOrderStatus = async (orderId, newStatus) => {
     try {
@@ -52,7 +54,7 @@ export default function AdminDashboard() {
     { icon: Package, label: 'Products', value: products.length, color: 'text-blue-400', bg: 'bg-blue-400/10' },
     { icon: DollarSign, label: 'Revenue', value: orderStats?.totalRevenue ? `$${Number(orderStats.totalRevenue).toFixed(0)}` : '$0', color: 'text-green-400', bg: 'bg-green-400/10' },
     { icon: ShoppingCart, label: 'Orders', value: orderStats?.totalOrders || 0, color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
-    { icon: TrendingUp, label: 'This Month', value: orderStats?.monthlyRevenue ? `$${Number(orderStats.monthlyRevenue).toFixed(0)}` : '$0', color: 'text-purple-400', bg: 'bg-purple-400/10' },
+    { icon: Users, label: 'Users', value: users.length, color: 'text-purple-400', bg: 'bg-purple-400/10' },
   ];
 
   const resetForm = () => {
@@ -143,6 +145,11 @@ export default function AdminDashboard() {
             className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${activeView === 'orders' ? 'bg-primary-600 text-white' : 'bg-dark-600 text-dark-200 hover:text-white'}`}>
             <ShoppingCart className="w-4 h-4" />
             <span>Orders ({orders.length})</span>
+          </button>
+          <button onClick={() => setActiveView('users')}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${activeView === 'users' ? 'bg-primary-600 text-white' : 'bg-dark-600 text-dark-200 hover:text-white'}`}>
+            <Users className="w-4 h-4" />
+            <span>Users ({users.length})</span>
           </button>
         </div>
 
@@ -350,6 +357,70 @@ export default function AdminDashboard() {
                               <option value="CANCELLED">Cancelled</option>
                             </select>
                           </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Users View */}
+        {activeView === 'users' && (
+          <>
+            {loading ? (
+              <div className="glass rounded-2xl p-12 text-center">
+                <Loader2 className="w-8 h-8 text-primary-400 animate-spin mx-auto" />
+              </div>
+            ) : users.length === 0 ? (
+              <div className="glass rounded-2xl p-12 text-center">
+                <Users className="w-12 h-12 text-dark-400 mx-auto mb-4" />
+                <p className="text-white font-semibold">No users found</p>
+              </div>
+            ) : (
+              <div className="glass rounded-2xl overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-white/10">
+                        <th className="text-left px-6 py-4 text-sm font-medium text-dark-200">User</th>
+                        <th className="text-left px-6 py-4 text-sm font-medium text-dark-200">Email</th>
+                        <th className="text-left px-6 py-4 text-sm font-medium text-dark-200">Role</th>
+                        <th className="text-left px-6 py-4 text-sm font-medium text-dark-200">Phone</th>
+                        <th className="text-left px-6 py-4 text-sm font-medium text-dark-200">Address</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {users.map((u) => (
+                        <tr key={u.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-sm font-bold">
+                                {u.name?.charAt(0).toUpperCase()}
+                              </div>
+                              <div>
+                                <p className="text-white text-sm font-medium">{u.name}</p>
+                                <p className="text-dark-300 text-xs">ID: {u.id}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center space-x-2">
+                              <Mail className="w-4 h-4 text-dark-300" />
+                              <span className="text-white text-sm">{u.email}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                              u.role === 'ADMIN' ? 'bg-purple-400/10 text-purple-400 border border-purple-400/30' : 'bg-blue-400/10 text-blue-400 border border-blue-400/30'
+                            }`}>
+                              {u.role === 'ADMIN' ? '👑 Admin' : '👤 User'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-dark-200 text-sm">{u.phone || '—'}</td>
+                          <td className="px-6 py-4 text-dark-200 text-sm max-w-[200px] truncate">{u.address || '—'}</td>
                         </tr>
                       ))}
                     </tbody>
