@@ -1,21 +1,13 @@
-package com.arstore.backend.entity;
+package com.arstore.backend.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
-@Entity
-@Table(name = "products")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class ProductRequest {
     @NotBlank(message = "Product name is required")
     @Size(min = 2, max = 200)
     private String productName;
@@ -36,9 +28,5 @@ public class Product {
     private String brand;
 
     @PositiveOrZero
-    @Builder.Default
     private Integer stock = 0;
-
-    @Builder.Default
-    private Boolean active = true;
 }
