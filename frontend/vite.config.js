@@ -11,5 +11,12 @@ export default defineConfig({
         changeOrigin: true,
       }
     }
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+  },
+  preview: {
+    port: 4173,
   }
 })

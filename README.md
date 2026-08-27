@@ -195,6 +195,42 @@ arstore-backend/
 
 <br>
 
+## 🌐 Live Deployment
+
+Deploy your AR Store to make it accessible to everyone via a public link.
+
+### Option 1: Vercel (Frontend) + Render (Backend) — Recommended
+
+**Step 1: Deploy Backend to Render**
+1. Push code to GitHub
+2. Go to [render.com](https://render.com) → New → Web Service
+3. Connect your GitHub repo → Select `backend` folder
+4. Settings:
+   - Build Command: `./mvnw clean compile`
+   - Start Command: `./mvnw spring-boot:run`
+   - Java version: `21`
+5. Click **Deploy** → Copy the URL (e.g., `https://arstore-api.onrender.com`)
+
+**Step 2: Deploy Frontend to Vercel**
+1. Go to [vercel.com](https://vercel.com) → New Project
+2. Import your GitHub repo → Select `frontend` folder
+3. Add Environment Variable:
+   - Name: `VITE_API_URL`
+   - Value: `https://arstore-api.onrender.com` (your Render URL)
+4. Click **Deploy** → You get a public URL like `https://arstore.vercel.app`
+
+**Step 3: Share the link!**
+Anyone can now access your AR Store at the Vercel URL.
+
+### Option 2: Railway (Full-Stack)
+1. Go to [railway.app](https://railway.app)
+2. Deploy backend first → Add MySQL plugin
+3. Deploy frontend → Set `VITE_API_URL` to backend URL
+
+> 💡 **Free tier available** on all platforms. No credit card needed!
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites
