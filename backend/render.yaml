@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: arstore-api
+    runtime: java
+    plan: free
+    buildCommand: "./mvnw clean compile -DskipTests"
+    startCommand: "./mvnw spring-boot:run"
+    envVars:
+      - key: JAVA_VERSION
+        value: "21"
